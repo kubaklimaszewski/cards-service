@@ -1,7 +1,11 @@
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.96),
+    rgba(15, 23, 42, 0.98)
+  );
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   border: 1px solid rgba(148, 163, 184, 0.28);
@@ -16,9 +20,16 @@
   content: "";
   position: absolute;
   inset: -40%;
-  background:
-    radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.12), transparent 55%),
-    radial-gradient(circle at 100% 0, rgba(129, 140, 248, 0.12), transparent 55%);
+  background: radial-gradient(
+      circle at 0 0,
+      rgba(56, 189, 248, 0.12),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 100% 0,
+      rgba(129, 140, 248, 0.12),
+      transparent 55%
+    );
   opacity: 0.9;
   pointer-events: none;
 }
@@ -96,8 +107,7 @@
   padding: 10px 11px;
   outline: none;
   transition: border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background-color var(--transition-fast),
+    box-shadow var(--transition-fast), background-color var(--transition-fast),
     transform 0.08s ease-out;
 }
 
@@ -145,27 +155,21 @@
   justify-content: center;
   gap: 8px;
   letter-spacing: 0.04em;
-  box-shadow:
-    0 7px 20px rgba(56, 189, 248, 0.35),
+  box-shadow: 0 7px 20px rgba(56, 189, 248, 0.35),
     0 0 0 1px rgba(8, 47, 73, 0.9);
-  transition: transform 0.1s ease-out,
-    box-shadow 0.12s ease-out,
+  transition: transform 0.1s ease-out, box-shadow 0.12s ease-out,
     filter 0.1s ease-out;
 }
 
 .auth-button:enabled:hover {
   transform: translateY(-1px);
-  box-shadow:
-    0 12px 28px rgba(56, 189, 248, 0.4),
-    0 0 0 1px rgba(8, 47, 73, 1);
+  box-shadow: 0 12px 28px rgba(56, 189, 248, 0.4), 0 0 0 1px rgba(8, 47, 73, 1);
   filter: brightness(1.03);
 }
 
 .auth-button:active {
   transform: translateY(0);
-  box-shadow:
-    0 6px 16px rgba(15, 23, 42, 0.9),
-    0 0 0 1px rgba(8, 47, 73, 0.9);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.9), 0 0 0 1px rgba(8, 47, 73, 0.9);
 }
 
 /* Link przełączenia */
@@ -199,5 +203,3 @@
 .auth-link:hover::after {
   width: 100%;
 }
-
-
