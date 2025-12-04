@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   isLogged();
 
-  let userData = localStorage.getItem("user");
-  user = JSON.parse(userData);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   try {
     document.getElementById("username").textContent = user["username"];

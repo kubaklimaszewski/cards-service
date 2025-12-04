@@ -1,3 +1,7 @@
+if (localStorage.getItem("token")) {
+  window.location.href = "dashboard.html";
+}
+
 const submit = document.querySelector('button[type="submit"]');
 
 const form = document.getElementById("register-form");
@@ -43,7 +47,7 @@ document.getElementById("reg-username").addEventListener("change", (event) => {
       "Wprowadź poprawną nazwę (tylko litery i cyfry)";
     submit.disabled = true;
   } else if (username.length < 3) {
-    usernameError.textContent = "Nazwa musi mieć conajmniej 3 znaki";
+      usernameError.textContent = "Nazwa musi mieć conajmniej 3 znaki";
     submit.disabled = true;
   } else {
     usernameError.textContent = "";

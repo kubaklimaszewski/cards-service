@@ -1,6 +1,6 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 const pool = require("../db");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../../config");
 const authMiddleware = require("../middleware/auth");
@@ -18,30 +18,30 @@ router.post("/login", async (req, res) => {
     return res.json({ success: false, message: "Wypełnij wszystkie pola" });
   }
 
-  const resul = await pool.query("SELECT * FROM users where email = $1", [
+  const result = await pool.query("SELECT * FROM users where email = $1", [
     email,
   ]);
 
-  if (resul.rows.length === 0) {
+  if (result.rows.length === 0) {
     return res.json({ success: false, message: "Email nie istnieje" });
   }
 
-  if (!(await bcrypt.compare(password, resul.rows[0].password_hash))) {
+  if (!(await bcrypt.compare(password, result.rows[0].password_hash))) {
     return res.json({ success: false, message: "Podano złe hasło" });
   }
 
   const token = jwt.sign(
     {
-      id: resul.rows[0].id,
-      email: resul.rows[0].email,
-      username: resul.rows[0].username,
-      money: resul.rows[0].money,
+      id: result.rows[0].id,
+      email: result.rows[0].email,
+      username: result.rows[0].username,
+      money: result.rows[0].money,
     },
     jwtSecret,
     { expiresIn: "1h" }
   );
 
-  res.json({ success: true, token });
+  return res.json({ success: true, token });
 });
 
 /**************
@@ -100,19 +100,19 @@ router.post("/register", async (req, res) => {
 
   const insertResult = await pool.query(
     "INSERT INTO users (email, username, password_hash, money) VALUES ($1, $2, $3, $4) RETURNING id",
-    [email, username, passwordHash, 0]
+    [email, username, passwordHash, 1000]
   );
 
   const newUserID = insertResult.rows[0].id;
 
-  res.json({ success: true, id: newUserID });
+  return res.json({ success: true, id: newUserID });
 });
 
 /*************
     Token
 *************/
 router.get("/profile", authMiddleware, (req, res) => {
-  res.json({ success: true, user: req.user });
+  return res.json({ success: true, user: req.user });
 });
 
 module.exports = router;

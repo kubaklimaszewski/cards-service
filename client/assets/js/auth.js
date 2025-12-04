@@ -23,7 +23,7 @@ form.addEventListener("submit", (event) => {
     },
     body: JSON.stringify(loginData),
   })
-    .then((response) => response.json())
+    .then((res) => res.json())
     .then((data) => {
       if (data.success) {
         localStorage.setItem("token", data.token);

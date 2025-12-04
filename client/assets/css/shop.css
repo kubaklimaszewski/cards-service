@@ -1,36 +1,5 @@
 /* SHOP – layout oparty na dashboard.css */
 
-.shop-balance-card {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  box-shadow: var(--shadow-soft);
-}
-
-.shop-balance-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.shop-balance-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.shop-balance-value {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--accent);
-}
-
 /* Grid z paczkami */
 
 .shop-packs-grid {
@@ -184,10 +153,6 @@
 /* Responsywność */
 
 @media (max-width: 768px) {
-  .shop-balance-card {
-    padding: 16px;
-  }
-
   .pack-card {
     padding: 18px 16px;
   }
