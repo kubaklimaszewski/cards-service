@@ -19,12 +19,11 @@ router.post("/load", async (req, res) => {
 });
 
 router.post("/buy", authMiddleware, async (req, res) => {
-  const { packId } = req.body;
+  const packId = parseInt(req.body.packId);
   const userId = req.user.id;
-
   if (!Number.isInteger(packId) || packId <= 0) {
     return res.status(400).json({
-      success: false,
+      success: false, 
       message: "Nieprawidłowe ID paczki",
     });
   }

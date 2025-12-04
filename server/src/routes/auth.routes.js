@@ -35,7 +35,6 @@ router.post("/login", async (req, res) => {
       id: result.rows[0].id,
       email: result.rows[0].email,
       username: result.rows[0].username,
-      money: result.rows[0].money,
     },
     jwtSecret,
     { expiresIn: "1h" }
@@ -113,6 +112,25 @@ router.post("/register", async (req, res) => {
 *************/
 router.get("/profile", authMiddleware, (req, res) => {
   return res.json({ success: true, user: req.user });
+});
+
+router.get("/info", authMiddleware, async (req, res) => {
+  const result = await pool.query("SELECT username, money FROM users WHERE id = $1", [
+    req.user.id,
+  ]);
+
+  if (result.rows.length === 0) {
+    return res.status(404).json({
+      success: false,
+      error: "Użytkownik nie znaleziony",
+    });
+  }
+
+  return res.json({
+    success: true,
+    username: result.rows[0]["username"],
+    money: result.rows[0]["money"],
+  });
 });
 
 module.exports = router;

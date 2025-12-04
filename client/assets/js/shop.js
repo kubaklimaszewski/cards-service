@@ -43,29 +43,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         //Dodawanie nasłuchiwaczy na przyciski
-
+        //Wywalić wszystkie user zamienic na id zwracane z authMiddleware
         document.querySelectorAll(".btn-pack-buy").forEach((btn) => {
-          const user = JSON.parse(localStorage.getItem("user"));
-          if (btn.dataset.packPrice > user["money"]) {
-            btn.disabled = true;
-          }
-
           btn.addEventListener("click", () => {
             const packId = btn.dataset.packId;
 
             fetch("http://localhost:3000/api/packs/buy", {
               method: "POST",
               headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ packId: packId, userId: user["id"] }),
+              body: JSON.stringify({ packId: packId }),
             })
               .then((res) => res.json())
               .then((data) => {
                 if (data.success) {
                   document.getElementById("balance").textContent = data.newMoney;
-                  user.money = user.money - btn.dataset.packPrice;
-                  localStorage.setItem("user", JSON.stringify(user));
                 }
               })
               .catch((error) => {
