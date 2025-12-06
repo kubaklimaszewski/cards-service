@@ -86,7 +86,7 @@ async function register(req, res, next) {
     // 4. Password hash
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
-    // 5. Insert do DB (RETURNING id, username, email)
+    // 5. Insert into DB (RETURNING id, username, email)
     const result = await pool.query(
       `INSERT INTO users (username, email, password_hash) 
         VALUES ($1, $2, $3) 
@@ -96,7 +96,7 @@ async function register(req, res, next) {
 
     const user = result.rows[0];
 
-    // 6. Odpowiedź 201
+    // 6. Response 201
     return res.status(201).json({
       success: true,
       data: {

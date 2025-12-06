@@ -88,7 +88,7 @@ form.addEventListener("submit", async (e) => {
     passwordConfirm: formData.get("passwordConfirm"),
   };
 
-  tr  y {
+  try {
     const res = await fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: {

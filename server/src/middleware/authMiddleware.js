@@ -12,7 +12,6 @@ function authMiddleware(req, res, next) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // payload = { id, username, email, iat, exp }
 
     req.user = {
       id: payload.id,

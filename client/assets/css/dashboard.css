@@ -279,6 +279,11 @@
   .card-placeholder {
     padding: 40px 20px;
   }
+
+  .shop-packs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -311,4 +316,17 @@
   .section-title {
     font-size: 16px;
   }
+
+  .shop-packs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+#shop-error {
+  margin-top: 50px;
+  margin-left: 4px;
+  font-size: 2rem;
+  color: var(--error);
+  text-align: center;
 }
