@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS packs (
   description TEXT,
   rarity VARCHAR(20),
   icon TEXT NOT NULL,
+  cards_count INTEGER NOT NULL CHECK (cards_count > 0),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

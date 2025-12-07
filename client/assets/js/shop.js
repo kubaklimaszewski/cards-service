@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!res.ok) {
       const error = await res.json();
-      document.getElementById("shop-error").textContent =
+      document.getElementById("packs-error").textContent =
         "Nie udało się załadować sklepu";
       error.error.message || "Wystąpił błąd";
       console.error("Shop error:", error);
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       div.dataset.id = pack.id;
 
       div.innerHTML = `
-        <div class="pack-rarity-badge">Zwykła</div>
+        <div class="pack-rarity-badge">${pack.rarity}</div>
           <div class="pack-visualization">
           <div class="viz-pattern"></div>
           <div class="viz-icon">${pack.icon}</div>
@@ -33,9 +33,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="pack-info-section">
           <h3 class="pack-name">${pack.name}</h3>
           <p class="pack-description">${pack.description}</p>
+          <p class="pack-description">Liczba kart: ${pack.cards_count}</p>
         </div>
         <div class="pack-price-section">
-          <div class="pack-price">${pack.price}<span class="pack-currency"> zł</span></div>
+          <div class="pack-price"><div>Cena</div> <div>${pack.price}</div></div>
         </div>
         <div class="pack-controls">
           <div class="quantity-container">
@@ -43,13 +44,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             <input type="number" class="quantity-input" value="1" min="1" max="10" />
             <button class="quantity-btn" data-action="inc">+</button>
           </div>
-          <button class="btn-buy">Kup</button>
+          <button class="pack-btn">Kup</button>
         </div>
       `;
 
       const input = div.querySelector(".quantity-input");
       const btns = div.querySelectorAll(".quantity-btn");
-      const buyBtn = div.querySelector(".btn-buy");
+      const buyBtn = div.querySelector(".pack-btn");
 
       input.addEventListener("change", () => {
         if (input.value < 0) {
@@ -72,6 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       buyBtn.addEventListener("click", async () => {
+        buyBtn.disabled = true;
         const quantity = Number(input.value);
         if (
           quantity * pack.price <=
@@ -93,11 +95,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (!res.ok) {
             const error = await res.json();
             console.error("Purchase error:", error);
+            buyBtn.disabled = false;
             return;
           }
 
           const data = await res.json();
-          console.log("Zakupiono paczki");
+          alert("Zakupiono paczki");
+          buyBtn.disabled = false;
           document.getElementById("balance").textContent = data.newBalance;
         }
       });
@@ -106,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   } catch (err) {
     console.error("Network error:", JSON.stringify(err));
-    document.getElementById("shop-error").textContent =
+    document.getElementById("packs-error").textContent =
       "Błąd sieci podczas ładowania sklepu";
   }
 });

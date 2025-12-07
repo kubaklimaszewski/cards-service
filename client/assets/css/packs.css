@@ -1,4 +1,4 @@
-.shop-packs-grid {
+.packs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
@@ -98,10 +98,10 @@
 }
 
 .pack-card[data-rarity="rare"] {
-  --pack-bg-1: #4c1d95;
-  --pack-bg-2: #2d1b4e;
-  --pack-accent: #c084fc;
-  --pack-glow: rgba(192, 132, 252, 0.3);
+  --pack-bg-1: #5d951d;
+  --pack-bg-2: #1b4e33;
+  --pack-accent: #1ac339;
+  --pack-glow: rgba(12, 94, 14, 0.3);
 }
 
 .pack-card[data-rarity="epic"] {
@@ -116,6 +116,13 @@
   --pack-bg-2: #2d1047;
   --pack-accent: #fbbf24;
   --pack-glow: rgba(251, 191, 36, 0.4);
+}
+
+.pack-card[data-rarity="mythic"] {
+  --pack-bg-1: #9d0e4e;
+  --pack-bg-2: #b93d10;
+  --pack-accent: #c41111;
+  --pack-glow: rgba(233, 13, 68, 0.4);
 }
 
 .pack-card::before {
@@ -178,11 +185,6 @@
   color: var(--pack-accent);
   text-align: center;
   letter-spacing: -0.5px;
-}
-
-.pack-currency {
-  font-size: 12px;
-  opacity: 0.85;
 }
 
 /* Controls */
@@ -254,7 +256,7 @@
 }
 
 /* Button */
-.btn-buy {
+.pack-btn {
   width: 100%;
   padding: 10px 14px;
   background: var(--pack-accent);
@@ -272,7 +274,7 @@
   overflow: hidden;
 }
 
-.btn-buy::after {
+.pack-btn::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -286,17 +288,17 @@
   transition: transform 0.6s ease;
 }
 
-.btn-buy:hover::after {
+.pack-btn:hover::after {
   transform: translateX(100%);
 }
 
-.btn-buy:hover {
+.pack-btn:hover {
   opacity: 0.9;
   transform: scale(1.06);
   box-shadow: 0 6px 18px var(--pack-glow);
 }
 
-.btn-buy:active {
+.pack-btn:active {
   transform: scale(0.96);
 }
 
@@ -340,4 +342,35 @@
   .pack-card {
     padding: 10px;
   }
+}
+.card-price-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.price-box {
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  border-radius: 6px;
+  border: 1px solid var(--card-accent);
+  text-align: center;
+}
+
+.price-label {
+  font-size: 10px;
+  color: rgba(192, 192, 192, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+  display: block;
+  font-weight: 600;
+}
+
+.price-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--card-accent);
+  text-shadow: 0 0 8px var(--card-glow);
 }

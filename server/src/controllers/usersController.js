@@ -11,7 +11,7 @@ async function me(req, res, next) {
     );
 
     if (result.rows.length === 0) {
-      throw new UnauthorizedError("Email not exist");
+      throw new UnauthorizedError("User not exist");
     }
 
     const user = result.rows[0];

@@ -1,16 +1,22 @@
 const pool = require("../config/database");
-const { NotFoundError, AppError, UnauthorizedError } = require("../utils/errors");
+const {
+  NotFoundError,
+  AppError,
+  UnauthorizedError,
+} = require("../utils/errors");
 
 async function packs(req, res, next) {
   try {
+    // 1. Get packs data
     const result = await pool.query(
-      "SELECT id, name, price, description, rarity, icon FROM packs"
+      "SELECT id, name, price, description, rarity, icon, cards_count FROM packs"
     );
 
     if (result.rows.length === 0) {
       throw new NotFoundError("No packs for display");
     }
 
+    // 2. Return data
     return res.status(200).json({
       success: true,
       packs: result.rows,
@@ -55,11 +61,13 @@ async function purchase(req, res, next) {
       throw new AppError("Not enough money", 403);
     }
 
-    await pool.query(
-      "UPDATE users SET balance = $1 WHERE id = $2",
-      [newBalance, user.id]
-    );
+    // 4. Update user balance
+    await pool.query("UPDATE users SET balance = $1 WHERE id = $2", [
+      newBalance,
+      user.id,
+    ]);
 
+    // 5. Add pack to user 
     await pool.query(
       `INSERT INTO users_packs (user_id, pack_id, quantity)
       VALUES ($1, $2, $3)
@@ -68,6 +76,7 @@ async function purchase(req, res, next) {
       [user.id, pack.id, quantity]
     );
 
+    // Response 200
     return res.status(200).json({
       success: true,
       newBalance: newBalance,
