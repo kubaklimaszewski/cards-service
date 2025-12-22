@@ -1,0 +1,65 @@
+/* User Info Section */
+.userInfoSection {
+  max-width: 1200px;
+  width: 100%;
+  margin: 24px auto 0;
+  padding: 0 24px;
+}
+
+.userInfoCard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.userInfoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userInfoLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.userInfoValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.userInfoValue.accent {
+  color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .userInfoCard {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .userInfoCard {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .userInfoValue {
+    font-size: 16px;
+  }
+}
+
+
