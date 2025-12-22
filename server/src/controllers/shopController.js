@@ -9,7 +9,7 @@ async function packs(req, res, next) {
   try {
     // 1. Get packs data
     const result = await pool.query(
-      "SELECT id, name, price, description, rarity, icon, cards_count FROM packs"
+      "SELECT id, name, price, description, rarity, icon, cards_count, 1 AS quantity FROM packs"
     );
 
     if (result.rows.length === 0) {
