@@ -3,10 +3,13 @@ const { UnauthorizedError } = require("../utils/errors");
 
 async function me(req, res, next) {
   try {
-
     // 1. Get user data
     const result = await pool.query(
-      "SELECT username, balance FROM users WHERE id = $1",
+      `SELECT u.username, u.balance, COALESCE(SUM(uc.quantity), 0) as cardsNumber 
+       FROM users u 
+       LEFT JOIN users_cards uc ON u.id = uc.user_id 
+       WHERE u.id = $1 
+       GROUP BY u.id, u.username, u.balance`,
       [req.user.id]
     );
 
@@ -21,6 +24,7 @@ async function me(req, res, next) {
       success: true,
       username: user.username,
       balance: user.balance,
+      cards: user.cardsnumber,
     });
   } catch (err) {
     next(err);

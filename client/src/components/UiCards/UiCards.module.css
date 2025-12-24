@@ -216,6 +216,7 @@
   font-family: var(--font-sans);
   position: relative;
   overflow: hidden;
+  flex: 1;
 }
 
 .cardBtn::after {
@@ -264,6 +265,186 @@
   border: 2px solid var(--bg);
 }
 
+/* No cards */
+.cardDisplay {
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.cardPlaceholder {
+  background: var(--bg-card);
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 60px 40px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.placeholderText {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/*Sort and filter controls*/
+.controls {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(10px);
+  justify-content: space-around;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.controlLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Sortowanie */
+.sortToggle {
+  display: flex;
+}
+
+.sortBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid var(--accent-soft);
+  border-radius: var(--radius-md);
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  font-size: larger;
+}
+
+.sortBtn:hover {
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.sortBtn.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Wyszukiwarka */
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  width: 400px;
+  padding: 12px 20px 12px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.searchInput::placeholder {
+  color: var(--muted);
+}
+
+.clearBtn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.clearBtn:hover {
+  color: var(--accent);
+}
+
+/* Filtry rarity */
+.rarityToggle {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.rarityBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.rarityBtn:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+
+.rarityBtn.active {
+  border-color: white;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Kolory rarity */
+.common {
+  background: #626f7c;
+}
+.rare {
+  background: #41ad20;
+}
+.epic {
+  background: #a13410;
+}
+.legendary {
+  background: #6b21a8;
+}
+.mythic {
+  background: #9c0826;
+}
+
+@media (max-width: 800px) {
+  .searchInput {
+    width: 350px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .cardsGrid {
@@ -277,6 +458,20 @@
 
   .cardValue {
     font-size: 22px;
+  }
+
+  .searchInput {
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .controls {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    align-items: center;
+    text-align: center;
   }
 }
 
@@ -307,5 +502,5 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  } 
+  }
 }

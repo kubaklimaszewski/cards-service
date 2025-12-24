@@ -16,7 +16,7 @@ function DashboardUserInfo({ user }) {
         </div>
         <div className={styles.userInfoItem}>
           <span className={styles.userInfoLabel}>Karty</span>
-          <span className={styles.userInfoValue}>42</span>
+          <span className={styles.userInfoValue}>{user.cards}</span>
         </div>
       </div>
     </section>

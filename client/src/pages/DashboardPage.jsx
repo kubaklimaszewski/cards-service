@@ -32,7 +32,7 @@ function DashboardPage({ theme, handlerTheme }) {
         }
 
         const data = await res.json();
-        setUser({ name: data.username, balance: data.balance });
+        setUser({ name: data.username, balance: data.balance, cards: data.cards });
       } catch (err) {
         localStorage.removeItem("token");
         navigate("/login");
@@ -97,13 +97,66 @@ function DashboardPage({ theme, handlerTheme }) {
       }
 
       const data = await res.json();
-      console.log(data)
-      setUser(prev => ({...prev, balance: data.data.newBalance}))
+      console.log(data);
+      setUser((prev) => ({ ...prev, balance: data.data.newBalance, cards: data.data.cards }));
       return data.data;
     } catch (err) {
       console.error("Network error:", JSON.stringify(err));
     }
   }
+
+  async function handlesellDuplicate(id) {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:3000/api/cards/${id}/sell/duplicate`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error("Card sell error:", error);
+        return;
+      }
+
+      const data = await res.json();
+      console.log(data);
+      setUser((prev) => ({ ...prev, balance: data.data.newBalance, cards: data.data.cards }));
+      return data.data;
+    } catch (err) {
+      console.error("Network error:", JSON.stringify(err));
+    }
+  }
+
+  async function handleOpen(id) {
+      try {
+        const res = await fetch(`http://127.0.0.1:3000/api/packs/${id}/open`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!res.ok) {
+          const error = await res.json();
+          console.log("Pack error:", error);
+          return;
+        }
+
+        const data = await res.json();
+        setUser((prev) => ({ ...prev, cards: data.data.cards}))
+
+        return data.data;
+      } catch (err) {
+        console.error("Network error:", JSON.stringify(err));
+      }
+    }
 
   return (
     <div className="dashboardContainer">
@@ -117,7 +170,7 @@ function DashboardPage({ theme, handlerTheme }) {
 
       <DashboardNav />
 
-      <Outlet context={{ handlePurchase, handleSell }} />
+      <Outlet context={{ handlePurchase, handleSell, handlesellDuplicate, handleOpen }} />
     </div>
   );
 }

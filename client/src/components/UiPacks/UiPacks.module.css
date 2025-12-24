@@ -1,4 +1,4 @@
-.PacksGrid {
+.packsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
@@ -253,9 +253,33 @@
   border: 2px solid var(--bg);
 }
 
+/* No packs */
+.packDisplay {
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.packPlaceholder {
+  background: var(--bg-card);
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 60px 40px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.placeholderText {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-  .PacksGrid {
+  .packsGrid {
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 16px;
   }
@@ -270,7 +294,7 @@
 }
 
 @media (max-width: 480px) {
-  .PacksGrid {
+  .packsGrid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
   }
