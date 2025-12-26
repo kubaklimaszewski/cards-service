@@ -19,7 +19,7 @@ function App() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  function handlerTheme() {
+  function handleTheme() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }
 
@@ -31,7 +31,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/dashboard"
-          element={<DashboardPage theme={theme} handlerTheme={handlerTheme} />}
+          element={<DashboardPage theme={theme} handleTheme={handleTheme} />}
         >
           <Route index element={<UiMain />} />
           <Route path="shop" element={<UiShop />} />

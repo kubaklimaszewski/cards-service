@@ -1,8 +1,10 @@
 import { useOutletContext } from "react-router-dom";
 import DashboardMain from "../DashboardMain/DashboardMain";
 import styles from "./UiPacks.module.css";
+import Pack from "../ZPack/Pack";
 
 import { useState, useEffect } from "react";
+import { PackAction } from "../ZPackActions/PackActions";
 
 function UiPacks() {
   const [packError, setPackError] = useState("");
@@ -69,42 +71,9 @@ function UiPacks() {
         ) : (
           <div className={styles.packsGrid}>
             {packs.map((pack) => (
-              <div
-                key={pack.id}
-                className={styles.packCard}
-                data-rarity={pack.rarity}
-              >
-                {/* <div className={styles.packRarityBadge}>{pack.rarity}</div> */}
-                <div className={styles.packVisualization}>
-                  <div className={styles.vizPattern}></div>
-                  <div className={styles.vizIcon}>
-                    {String.fromCodePoint(pack.icon)}
-                  </div>
-                </div>
-
-                <div className={styles.packInfoSection}>
-                  <h3 className={styles.packName}>{pack.name}</h3>
-                  <p className={styles.packDescription}>{pack.description}</p>
-                  <p className={styles.packDescription}>
-                    Liczba kart: {pack.cards_count}
-                  </p>
-                </div>
-
-                <div className={styles.packPriceSection}>
-                  <div className={styles.packPrice}>
-                    <div>Ilość</div> <div>{pack.quantity}</div>
-                  </div>
-                </div>
-
-                <div className={styles.packControls}>
-                  <button
-                    onClick={() => handlePackOpen(pack.id, pack.quantity)}
-                    className={styles.packBtn}
-                  >
-                    Otwórz
-                  </button>
-                </div>
-              </div>
+              <Pack key={pack.id} pack={pack} label="Ilość" active={true}>
+                <PackAction active={true} pack={pack} onAction={handlePackOpen}>Otwórz</PackAction>
+              </Pack>
             ))}
           </div>
         )}

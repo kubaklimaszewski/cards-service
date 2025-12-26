@@ -1,8 +1,10 @@
 import { useOutletContext } from "react-router-dom";
 import DashboardMain from "../DashboardMain/DashboardMain";
+import Card from "../ZCard/Card";
 import styles from "./UiCards.module.css";
 
 import { useState, useEffect, useMemo } from "react";
+import { CardButton } from "../ZCardActions/CardActions";
 
 function UiCards() {
   const [cardsError, setCardsError] = useState("");
@@ -181,50 +183,10 @@ function UiCards() {
 
             <div className={styles.cardsGrid}>
               {filteredCards.map((card) => (
-                <div
-                  key={card.id}
-                  className={styles.card}
-                  data-rarity={card.rarity}
-                >
-                  <div className={styles.cardRarityBadge}>{card.rarity}</div>
-                  <div className={styles.cardVisualization}>
-                    <div className={styles.vizPattern}></div>
-                    <div className={styles.vizIcon}>
-                      {String.fromCodePoint(card.icon)}
-                    </div>
-                  </div>
-
-                  <div className={styles.cardInfoSection}>
-                    <h3 className={styles.cardName}>{card.name}</h3>
-                    <p className={styles.cardDescription}>{card.description}</p>
-                  </div>
-
-                  <div className={styles.cardValueSection}>
-                    <div className={styles.valueBox}>
-                      <span className={styles.valueLabel}>Wartość</span>
-                      <span className={styles.cardValue}>{card.value}</span>
-                    </div>
-                    <div className={styles.valueBox}>
-                      <span className={styles.valueLabel}>Ilość</span>
-                      <span className={styles.cardValue}>{card.quantity}</span>
-                    </div>
-                  </div>
-
-                  <div className={styles.cardControls}>
-                    <button
-                      onClick={() => handleCardSell(card.id)}
-                      className={styles.cardBtn}
-                    >
-                      Sprzedaj
-                    </button>
-                    <button
-                      onClick={() => handleCardsSell(card.id)}
-                      className={styles.cardBtn}
-                    >
-                      Sprzedaj duplikaty
-                    </button>
-                  </div>
-                </div>
+                <Card key={card.id} card={card}>
+                    <CardButton id={card.id} onAction={handleCardSell}>Sprzedaj</CardButton>
+                    <CardButton id={card.id} onAction={handleCardsSell}>Sprzedaj duplikaty</CardButton>
+                </Card>
               ))}
             </div>
           </>

@@ -4,9 +4,11 @@ import DashboardUserInfo from "../components/DashboardUserInfo/DashboardUserInfo
 import { useState, useEffect } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 
-function DashboardPage({ theme, handlerTheme }) {
+function DashboardPage({ theme, handleTheme }) {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const [isClaimed, setIsClaimed] = useState(false);
+  const [bpQuantity, setBpQuantity] = useState(0);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,7 +34,13 @@ function DashboardPage({ theme, handlerTheme }) {
         }
 
         const data = await res.json();
-        setUser({ name: data.username, balance: data.balance, cards: data.cards });
+        setUser({
+          name: data.username,
+          balance: data.balance,
+          cards: data.cards,
+        });
+        setIsClaimed(data.isClaimed);
+        setBpQuantity(data.bpQuantity);
       } catch (err) {
         localStorage.removeItem("token");
         navigate("/login");
@@ -43,7 +51,7 @@ function DashboardPage({ theme, handlerTheme }) {
     fetchUser();
   }, [navigate]);
 
-  function handlerLogOut() {
+  function handleLogOut() {
     localStorage.removeItem("token");
     navigate("/login");
   }
@@ -80,6 +88,69 @@ function DashboardPage({ theme, handlerTheme }) {
     }
   }
 
+  async function handlePurchaseBP(id, quantity, price) {
+    try {
+      if (user.balance < quantity * price) {
+        return;
+      }
+      const res = await fetch(
+        `http://127.0.0.1:3000/api/shop/packs/purchase/basicPack`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ quantity: quantity }),
+        }
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        error.error.message || "Wystąpił błąd";
+        console.error("Shop error:", error);
+        return;
+      }
+
+      const data = await res.json();
+      alert("Zakupiono paczki.");
+      setUser((prev) => ({ ...prev, balance: data.newBalance }));
+      setBpQuantity(data.newBP)
+    } catch (err) {
+      console.error("Network error:", JSON.stringify(err));
+    }
+  }
+
+  async function handleClaimPack(id) {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:3000/api/shop/packs/${id}/claim`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        error.error.message || "Wystąpił błąd";
+        console.error("Claim error:", error);
+        return;
+      }
+
+      const data = await res.json();
+      if (id === 1) {
+        setIsClaimed(true);
+      }
+      alert("Odebrano paczkę.");
+    } catch (err) {
+      console.error("Network error:", JSON.stringify(err));
+    }
+  }
+
   async function handleSell(id) {
     try {
       const res = await fetch(`http://127.0.0.1:3000/api/cards/${id}/sell`, {
@@ -98,7 +169,11 @@ function DashboardPage({ theme, handlerTheme }) {
 
       const data = await res.json();
       console.log(data);
-      setUser((prev) => ({ ...prev, balance: data.data.newBalance, cards: data.data.cards }));
+      setUser((prev) => ({
+        ...prev,
+        balance: data.data.newBalance,
+        cards: data.data.cards,
+      }));
       return data.data;
     } catch (err) {
       console.error("Network error:", JSON.stringify(err));
@@ -126,7 +201,11 @@ function DashboardPage({ theme, handlerTheme }) {
 
       const data = await res.json();
       console.log(data);
-      setUser((prev) => ({ ...prev, balance: data.data.newBalance, cards: data.data.cards }));
+      setUser((prev) => ({
+        ...prev,
+        balance: data.data.newBalance,
+        cards: data.data.cards,
+      }));
       return data.data;
     } catch (err) {
       console.error("Network error:", JSON.stringify(err));
@@ -134,43 +213,54 @@ function DashboardPage({ theme, handlerTheme }) {
   }
 
   async function handleOpen(id) {
-      try {
-        const res = await fetch(`http://127.0.0.1:3000/api/packs/${id}/open`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+    try {
+      const res = await fetch(`http://127.0.0.1:3000/api/packs/${id}/open`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-        if (!res.ok) {
-          const error = await res.json();
-          console.log("Pack error:", error);
-          return;
-        }
-
-        const data = await res.json();
-        setUser((prev) => ({ ...prev, cards: data.data.cards}))
-
-        return data.data;
-      } catch (err) {
-        console.error("Network error:", JSON.stringify(err));
+      if (!res.ok) {
+        const error = await res.json();
+        console.log("Pack error:", error);
+        return;
       }
+
+      const data = await res.json();
+      setUser((prev) => ({ ...prev, cards: data.data.cards }));
+
+      return data.data;
+    } catch (err) {
+      console.error("Network error:", JSON.stringify(err));
     }
+  }
 
   return (
     <div className="dashboardContainer">
       <DashboardHeader
         theme={theme}
-        handlerTheme={handlerTheme}
-        handlerLogOut={handlerLogOut}
+        handleTheme={handleTheme}
+        handleLogOut={handleLogOut}
       />
 
       <DashboardUserInfo user={user} />
 
       <DashboardNav />
 
-      <Outlet context={{ handlePurchase, handleSell, handlesellDuplicate, handleOpen }} />
+      <Outlet
+        context={{
+          handlePurchase,
+          handlePurchaseBP,
+          handleSell,
+          handlesellDuplicate,
+          handleOpen,
+          isClaimed,
+          bpQuantity,
+          handleClaimPack,
+        }}
+      />
     </div>
   );
 }

@@ -1,13 +1,21 @@
 import DashboardMain from "../DashboardMain/DashboardMain";
+import Pack from "../ZPack/Pack";
+import { PackAction, ShopAction } from "../ZPackActions/PackActions";
 import styles from "./UiShop.module.css";
 
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 
 function UiShop() {
-  const { handlePurchase } = useOutletContext();
+  const {
+    handlePurchase,
+    handlePurchaseBP,
+    handleClaimPack,
+    isClaimed,
+    bpQuantity,
+  } = useOutletContext();
   const [shopError, setShopError] = useState("");
-  
+
   function Content() {
     const [packs, setPacks] = useState([]);
 
@@ -39,11 +47,11 @@ function UiShop() {
       fetchShop();
     }, []);
 
-    function handleIncrease(id) {
+    function handleIncrease(id, max) {
       setPacks((prev) =>
         prev.map((pack) =>
           pack.id === id
-            ? { ...pack, quantity: Math.min(pack.quantity + 1, 25) }
+            ? { ...pack, quantity: Math.min(pack.quantity + 1, max) }
             : pack
         )
       );
@@ -59,8 +67,8 @@ function UiShop() {
       );
     }
 
-    function handleChange(id, value) {
-      value = Math.min(Math.max(value, 1), 25);
+    function handleChange(id, value, max) {
+      value = Math.min(Math.max(value, 1), max);
 
       setPacks((prev) =>
         prev.map((pack) =>
@@ -70,70 +78,59 @@ function UiShop() {
     }
 
     return (
-      <div className={styles.shopPacksGrid}>
-        {packs.map((pack) => (
-          <div
-            key={pack.id}
-            className={styles.packCard}
-            data-rarity={pack.rarity}
-          >
-            {/* <div className={styles.packRarityBadge}>{pack.rarity}</div> */}
-            <div className={styles.packVisualization}>
-              <div className={styles.vizPattern}></div>
-              <div className={styles.vizIcon}>
-                {String.fromCodePoint(pack.icon)}
-              </div>
-            </div>
-
-            <div className={styles.packInfoSection}>
-              <h3 className={styles.packName}>{pack.name}</h3>
-              <p className={styles.packDescription}>{pack.description}</p>
-              <p className={styles.packDescription}>
-                Liczba kart: {pack.cards_count}
-              </p>
-            </div>
-
-            <div className={styles.packPriceSection}>
-              <div className={styles.packPrice}>
-                <div>Cena</div> <div>{pack.price}</div>
-              </div>
-            </div>
-
-            <div className={styles.packControls}>
-              <div className={styles.quantityContainer}>
-                <button
-                  onClick={() => handleDecrease(pack.id)}
-                  className={styles.quantityBtn}
+      <>
+        <div className={styles.wrapper}>
+          <h2 className={styles.title}>Paczki</h2>
+          <div className={styles.shopPacksGrid}>
+            {packs[0] && (
+              <Pack pack={packs[0]} label="Cena" active={bpQuantity > 0}>
+                <ShopAction
+                  pack={packs[0]}
+                  active={bpQuantity > 0}
+                  quantitySection={true}
+                  onChange={handleChange}
+                  onIncrease={handleIncrease}
+                  onDecrease={handleDecrease}
+                  onAction={handlePurchaseBP}
+                  max={bpQuantity}
                 >
-                  −
-                </button>
-                <input
-                  type="number"
-                  className={styles.quantityInput}
-                  value={pack.quantity}
-                  min="1"
-                  max="10"
-                  onChange={(e) => handleChange(pack.id, e.target.value)}
-                />
-                <button
-                  onClick={() => handleIncrease(pack.id)}
-                  className={styles.quantityBtn}
-                >
-                  +
-                </button>
-              </div>
-              <button
-                onClick={() =>
-                  handlePurchase(pack.id, pack.quantity, pack.price)
-                }
-                className={styles.packBtn}
-              >
-                Kup
-              </button>
+                  Kup {bpQuantity}/5
+                </ShopAction>
+              </Pack>
+            )}
+            {packs
+              .filter((pack) => pack.id !== 1)
+              .map((pack) => (
+                <Pack key={pack.id} pack={pack} label="Cena" active={true}>
+                  <ShopAction
+                    pack={pack}
+                    active={true}
+                    onChange={handleChange}
+                    onIncrease={handleIncrease}
+                    onDecrease={handleDecrease}
+                    onAction={handlePurchase}
+                    max={25}
+                  >
+                    Kup
+                  </ShopAction>
+                </Pack>
+              ))}
+          </div>
+        </div>
+
+        {packs[0] && (
+          <div className={styles.wrapper}>
+            <h2 className={styles.title}>Codzienna paczka</h2>
+            <div className={styles.shopPacksGrid}>
+              <Pack pack={packs[0]} active={!isClaimed}>
+                <PackAction pack={packs[0]} active={!isClaimed} onAction={handleClaimPack}>
+                  {isClaimed ? "Odebrano" : "Odbierz"}
+                </PackAction>
+              </Pack>
             </div>
           </div>
-        ))}
-      </div>
+        )}
+      </>
     );
   }
 
