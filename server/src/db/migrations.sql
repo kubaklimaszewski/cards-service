@@ -1,11 +1,24 @@
+CREATE DATABASE card_service
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Polish_Poland.1250'
+    LC_CTYPE = 'Polish_Poland.1250'
+    LOCALE_PROVIDER = 'libc'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;E
+
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   username VARCHAR(32) NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
-  balance INTEGER DEFAULT 500,
+  balance INTEGER DEFAULT 300 CHECK (balance >= 0),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_login DATE DEFAULT CURRENT_DATE,
+  free_pack BOOLEAN DEFAULT TRUE,
+  basic_packs INTEGER DEFAULT 5 CHECK (basic_packs>=0)
 );
 
 CREATE TABLE IF NOT EXISTS packs (

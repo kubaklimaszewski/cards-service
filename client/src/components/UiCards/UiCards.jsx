@@ -1,15 +1,22 @@
 import { useOutletContext } from "react-router-dom";
 import DashboardMain from "../DashboardMain/DashboardMain";
+import Card from "../ZCard/Card";
 import styles from "./UiCards.module.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { CardButton } from "../ZCardActions/CardActions";
 
 function UiCards() {
   const [cardsError, setCardsError] = useState("");
 
   function Content() {
     const [cards, setCards] = useState([]);
-    const { handleSell } = useOutletContext();
+    const [rarityFilter, setRarityFilter] = useState("all");
+    const [raritySort, setRaritySort] = useState("none");
+    const [searchFilter, setSearchFilter] = useState("");
+    const { handleSell, handlesellDuplicate } = useOutletContext();
+
+    const rarities = ["common", "rare", "epic", "legendary", "mythic"];
 
     useEffect(() => {
       const fetchCards = async () => {
@@ -31,7 +38,9 @@ function UiCards() {
           }
 
           const data = await res.json();
-          setCards(data.data);
+          if (data.data) {
+            setCards(data.data);
+          }
         } catch (err) {
           console.error("Network error:", JSON.stringify(err));
           setCardsError("Błąd sieci podczas ładowania kart");
@@ -40,12 +49,57 @@ function UiCards() {
       fetchCards();
     }, []);
 
+    const filteredCards = useMemo(() => {
+      let result = [...cards];
+
+      if (searchFilter.trim()) {
+        const term = searchFilter.toLowerCase().trim();
+        result = result.filter((card) =>
+          card.name.toLowerCase().includes(term)
+        );
+      }
+
+      if (rarityFilter !== "all") {
+        result = result.filter((card) => card.rarity === rarityFilter);
+      } else {
+        const rarityOrder = {
+          mythic: 5,
+          legendary: 4,
+          epic: 3,
+          rare: 2,
+          common: 1,
+        };
+
+        result.sort((a, b) => {
+          const aRarity = rarityOrder[a.rarity];
+          const bRarity = rarityOrder[b.rarity];
+
+          return raritySort === "none" ? aRarity - bRarity : bRarity - aRarity;
+        });
+      }
+
+      return result;
+    }, [rarityFilter, cards, raritySort, searchFilter]);
+
     async function handleCardSell(id) {
       const result = await handleSell(id);
 
       if (!result) return;
-      
-      await alert("Sprzedano kartę za " + result.value);
+
+      setCards((prev) =>
+        prev
+          .map((card) =>
+            card.id === id ? { ...card, quantity: result.newQuantity } : card
+          )
+          .filter((card) => card.quantity > 0)
+      );
+    }
+
+    async function handleCardsSell(id) {
+      const result = await handlesellDuplicate(id);
+
+      if (!result) return;
+
       setCards((prev) =>
         prev.map((card) =>
           card.id === id ? { ...card, quantity: result.newQuantity } : card
@@ -54,39 +108,90 @@ function UiCards() {
     }
 
     return (
-      <div className={styles.cardsGrid}>
-        {cards.filter(card => card.quantity > 0).map((card) => (
-          <div key={card.id} className={styles.card} data-rarity={card.rarity}>
-            <div className={styles.cardRarityBadge}>{card.rarity}</div>
-            <div className={styles.cardVisualization}>
-              <div className={styles.vizPattern}></div>
-              <div className={styles.vizIcon}>
-                {String.fromCodePoint(card.icon)}
-              </div>
-            </div>
-
-            <div className={styles.cardInfoSection}>
-              <h3 className={styles.cardName}>{card.name}</h3>
-              <p className={styles.cardDescription}>{card.description}</p>
-            </div>
-
-            <div className={styles.cardValueSection}>
-              <div className={styles.valueBox}>
-                <span className={styles.valueLabel}>Wartość</span>
-                <span className={styles.cardValue}>{card.value}</span>
-              </div>
-              <div className={styles.valueBox}>
-                <span className={styles.valueLabel}>Ilość</span>
-                <span className={styles.cardValue}>{card.quantity}</span>
-              </div>
-            </div>
-
-            <div className={styles.cardControls}>
-              <button onClick={() => handleCardSell(card.id)} className={styles.cardBtn}>Sprzedaj</button>
+      <>
+        {cards.length === 0 ? (
+          <div className={styles.cardDisplay}>
+            <div className={styles.cardPlaceholder}>
+              <p className={styles.placeholderText}>
+                Brak kart do wyświetlenia
+              </p>
             </div>
           </div>
-        ))}
-      </div>
+        ) : (
+          <>
+            <div className={styles.controls}>
+              {/* Sortowanie */}
+              <div className={styles.controlGroup}>
+                <label className={styles.controlLabel}>Sortuj</label>
+                <div className={styles.sortToggle}>
+                  <button
+                    className={`${styles.sortBtn} ${
+                      raritySort !== "none" ? styles.active : ""
+                    }`}
+                    onClick={() =>
+                      setRaritySort(raritySort === "none" ? "reverse" : "none")
+                    }
+                  >
+                    {raritySort === "none" ? "▼" : "▲"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Wyszukiwarka */}
+              <div className={styles.controlGroup}>
+                <label className={styles.controlLabel}>Szukaj</label>
+                <div className={styles.searchWrapper}>
+                  <input
+                    className={styles.searchInput}
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    placeholder="Wpisz nazwę karty..."
+                    type="text"
+                  />
+                  {searchFilter && (
+                    <button
+                      className={styles.clearBtn}
+                      onClick={() => setSearchFilter("")}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Filtry rarity */}
+              <div className={styles.controlGroup}>
+                <label className={styles.controlLabel}>Rzadkość</label>
+                <div className={styles.rarityToggle}>
+                  {rarities.map((rarity) => (
+                    <button
+                      key={rarity}
+                      className={`${styles.rarityBtn} ${styles[rarity]} ${
+                        rarityFilter === rarity ? styles.active : ""
+                      }`}
+                      data-rarity={rarity}
+                      onClick={() =>
+                        setRarityFilter(
+                          rarityFilter === rarity ? "all" : rarity
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.cardsGrid}>
+              {filteredCards.map((card) => (
+                <Card key={card.id} card={card}>
+                    <CardButton id={card.id} onAction={handleCardSell}>Sprzedaj</CardButton>
+                    <CardButton id={card.id} onAction={handleCardsSell}>Sprzedaj duplikaty</CardButton>
+                </Card>
+              ))}
+            </div>
+          </>
+        )}
+      </>
     );
   }
 

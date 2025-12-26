@@ -1,6 +1,6 @@
 import styles from "./DashboardHeader.module.css";
 
-function DashboardHeader({theme, handlerTheme, handlerLogOut}) {
+function DashboardHeader({theme, handleTheme, handleLogOut}) {
   return (
     <header className={styles.dashboardHeader}>
       <div className={styles.headerContent}>
@@ -9,14 +9,14 @@ function DashboardHeader({theme, handlerTheme, handlerLogOut}) {
           <button
             type="button"
             className={styles.themeToggle}
-            onClick={handlerTheme}
+            onClick={handleTheme}
             aria-label="Zmień motyw">
             {theme === "dark" ? "🌑" : "☀️"}
           </button>
 
           <button
             id="logout-btn"
-            onClick={handlerLogOut}
+            onClick={handleLogOut}
             className={`${styles.btn} ${styles.btnLogout}`}>
             Wyloguj
           </button>

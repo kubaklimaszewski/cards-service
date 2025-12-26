@@ -25,7 +25,10 @@ async function packs(req, res, next) {
     );
 
     if (packsResult.rows.length === 0) {
-      throw new NotFoundError("No packs for display");
+    return res.status(200).json({
+      success: true,
+      data: false,
+    });
     }
 
     // 2. Return data
@@ -135,11 +138,17 @@ async function open(req, res, next) {
 
     console.log("informacje o wylosowanych kartach: ", cards);
 
+    const cardsnumber = await pool.query(
+      "SELECT sum(quantity) as cards from users_cards WHERE user_id = $1",
+      [userId]
+    ).then(res => res.rows[0].cards)
+
     return res.status(200).json({
       success: true,
       data: {
         cards: cards,
         newQuantity: updateResult.rows[0].quantity,
+        cards: cardsnumber
       },
     });
   } catch (err) {
