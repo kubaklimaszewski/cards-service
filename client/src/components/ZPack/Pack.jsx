@@ -1,6 +1,6 @@
 import styles from "./Pack.module.css";
 
-function Pack({ pack, label, children, active }) {
+export function Pack({ pack, label, children, active }) {
   return (
     <>
       <div
@@ -22,11 +22,12 @@ function Pack({ pack, label, children, active }) {
             Liczba kart: {pack.cards_count}
           </p>
         </div>
-        
+
         {label && (
           <div className={styles.packPriceSection}>
             <div className={styles.packPrice}>
-              <div>{label}</div> <div>{pack.price*pack.quantity || pack.quantity}</div>
+              <div>{label}</div>{" "}
+              <div>{pack.price * pack.quantity || pack.quantity}</div>
             </div>
           </div>
         )}
@@ -35,5 +36,3 @@ function Pack({ pack, label, children, active }) {
     </>
   );
 }
-
-export default Pack;

@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import DashboardMain from "../DashboardMain/DashboardMain";
-import Card from "../ZCard/Card";
+import { Card } from "../ZCard/Card";
 import styles from "./UiCards.module.css";
 
 import { useState, useEffect, useMemo } from "react";
@@ -81,28 +81,28 @@ function UiCards() {
       return result;
     }, [rarityFilter, cards, raritySort, searchFilter]);
 
-    async function handleCardSell(id) {
-      const result = await handleSell(id);
+    async function handleCardSell(c) {
+      const result = await handleSell(c.id);
 
       if (!result) return;
 
       setCards((prev) =>
         prev
           .map((card) =>
-            card.id === id ? { ...card, quantity: result.newQuantity } : card
+            card.id === c.id ? { ...card, quantity: result.newQuantity } : card
           )
           .filter((card) => card.quantity > 0)
       );
     }
 
-    async function handleCardsSell(id) {
-      const result = await handlesellDuplicate(id);
+    async function handleCardsSell(c) {
+      const result = await handlesellDuplicate(c.id);
 
       if (!result) return;
 
       setCards((prev) =>
         prev.map((card) =>
-          card.id === id ? { ...card, quantity: result.newQuantity } : card
+          card.id === c.id ? { ...card, quantity: result.newQuantity } : card
         )
       );
     }
@@ -184,8 +184,8 @@ function UiCards() {
             <div className={styles.cardsGrid}>
               {filteredCards.map((card) => (
                 <Card key={card.id} card={card}>
-                    <CardButton id={card.id} onAction={handleCardSell}>Sprzedaj</CardButton>
-                    <CardButton id={card.id} onAction={handleCardsSell}>Sprzedaj duplikaty</CardButton>
+                    <CardButton card={card} onAction={handleCardSell}>Sprzedaj</CardButton>
+                    <CardButton card={card} onAction={handleCardsSell}>Sprzedaj duplikaty</CardButton>
                 </Card>
               ))}
             </div>

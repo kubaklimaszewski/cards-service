@@ -89,7 +89,7 @@ async function open(req, res, next) {
 
     for (i = 0; i < cardsCount; i++) {
       weight = 0;
-      random = Math.ceil(Math.random() * totalWeight);
+      random = (Math.random() * totalWeight);
       for (const row of openResult.rows) {
         weight += row.drop_weight;
         if (weight >= random) {
@@ -148,7 +148,7 @@ async function open(req, res, next) {
       data: {
         cards: cards,
         newQuantity: updateResult.rows[0].quantity,
-        cards: cardsnumber
+        cardsNumber: cardsnumber
       },
     });
   } catch (err) {

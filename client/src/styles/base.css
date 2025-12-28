@@ -1,6 +1,7 @@
 :root {
   --bg: #020617;
   --bg-card: #020617;
+  --bg2-card: rgba(2,6,23, 0.8)
   --bg-gradient: radial-gradient(circle at top, #1f2937, #020617);
   --text: #e5e7eb;
   --muted: #9ca3af;

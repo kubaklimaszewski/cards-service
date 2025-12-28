@@ -115,16 +115,16 @@ function DashboardPage({ theme, handleTheme }) {
       const data = await res.json();
       alert("Zakupiono paczki.");
       setUser((prev) => ({ ...prev, balance: data.newBalance }));
-      setBpQuantity(data.newBP)
+      setBpQuantity(data.newBP);
     } catch (err) {
       console.error("Network error:", JSON.stringify(err));
     }
   }
 
-  async function handleClaimPack(id) {
+  async function handleClaimPack(pack) {
     try {
       const res = await fetch(
-        `http://127.0.0.1:3000/api/shop/packs/${id}/claim`,
+        `http://127.0.0.1:3000/api/shop/packs/${pack.id}/claim`,
         {
           method: "POST",
           headers: {
@@ -142,7 +142,7 @@ function DashboardPage({ theme, handleTheme }) {
       }
 
       const data = await res.json();
-      if (id === 1) {
+      if (pack.id === 1) {
         setIsClaimed(true);
       }
       alert("Odebrano paczkę.");
@@ -212,6 +212,35 @@ function DashboardPage({ theme, handleTheme }) {
     }
   }
 
+  async function handleSellAll(ids) {
+    try {
+      const res = await fetch("http://127.0.0.1:3000/api/cards/sell/all", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids: ids }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error("Card sell error:", error);
+        return;
+      }
+
+      const data = await res.json();
+      setUser((prev) => ({
+        ...prev,
+        balance: data.data.newBalance,
+        cards: data.data.cards,
+      }));
+      return data.data;
+    } catch (err) {
+      console.error("Network error:", JSON.stringify(err));
+    }
+  }
+
   async function handleOpen(id) {
     try {
       const res = await fetch(`http://127.0.0.1:3000/api/packs/${id}/open`, {
@@ -229,7 +258,7 @@ function DashboardPage({ theme, handleTheme }) {
       }
 
       const data = await res.json();
-      setUser((prev) => ({ ...prev, cards: data.data.cards }));
+      setUser((prev) => ({ ...prev, cards: data.data.cardsNumber }));
 
       return data.data;
     } catch (err) {
@@ -253,9 +282,10 @@ function DashboardPage({ theme, handleTheme }) {
         context={{
           handlePurchase,
           handlePurchaseBP,
+          handleOpen,
           handleSell,
           handlesellDuplicate,
-          handleOpen,
+          handleSellAll,
           isClaimed,
           bpQuantity,
           handleClaimPack,

@@ -83,35 +83,35 @@
 }
 
 /* Rarity Colors */
-.packCard[data-rarity="common"] {
+*[data-rarity="common"] {
   --pack-bg-1: #3f4f63;
   --pack-bg-2: #222a39;
   --pack-accent: #a1a2a3;
   --pack-glow: rgba(139, 142, 144, 0.097);
 }
 
-.packCard[data-rarity="rare"] {
+*[data-rarity="rare"] {
   --pack-bg-1: #5d951d;
   --pack-bg-2: #1b4e33;
   --pack-accent: #1ac339;
   --pack-glow: rgba(12, 94, 14, 0.3);
 }
 
-.packCard[data-rarity="epic"] {
+*[data-rarity="epic"] {
   --pack-bg-1: #7c2d12;
   --pack-bg-2: #3d1a07;
   --pack-accent: #fb923c;
   --pack-glow: rgba(251, 146, 60, 0.3);
 }
 
-.packCard[data-rarity="legendary"] {
+*[data-rarity="legendary"] {
   --pack-bg-1: #6b21a8;
   --pack-bg-2: #2d1047;
   --pack-accent: #fbbf24;
   --pack-glow: rgba(251, 191, 36, 0.4);
 }
 
-.packCard[data-rarity="mythic"] {
+*[data-rarity="mythic"] {
   --pack-bg-1: #9d0e4e;
   --pack-bg-2: #b93d10;
   --pack-accent: #c41111;
@@ -208,7 +208,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-
   .packName {
     font-size: 15px;
   }

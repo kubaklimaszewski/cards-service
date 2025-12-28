@@ -58,11 +58,11 @@ export function PackAction({ pack, active, onAction, children }) {
   return (
     <>
       <button
-        onClick={() => onAction(pack.id)}
+        onClick={() => onAction(pack)}
         disabled={!active}
         className={`${styles.packBtn} ${active ? styles.active : ""}`}
       >
-        {children}
+        {children} 
       </button>
     </>
   );

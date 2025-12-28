@@ -75,6 +75,10 @@
   font-family: var(--font-sans);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .packBtn::after {
