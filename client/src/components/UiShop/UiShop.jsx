@@ -1,5 +1,5 @@
 import DashboardMain from "../DashboardMain/DashboardMain";
-import Pack from "../ZPack/Pack";
+import {Pack} from "../ZPack/Pack";
 import { PackAction, ShopAction } from "../ZPackActions/PackActions";
 import styles from "./UiShop.module.css";
 

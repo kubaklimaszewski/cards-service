@@ -152,7 +152,7 @@ async function sellDuplicate(req, res, next) {
         [userId]
       )
       .then((res) => res.rows[0].cards);
-      
+
     return res.status(200).json({
       success: true,
       data: {
@@ -167,8 +167,78 @@ async function sellDuplicate(req, res, next) {
   }
 }
 
+async function sellAll(req, res, next) {
+  try {
+    const cardIds = req.body.ids;
+    const userId = req.user.id;
+    const sellCount = {};
+    cardIds.forEach((id) => (sellCount[id] = (sellCount[id] || 0) + 1));
+
+    if (cardIds.length === 0) {
+      throw new UnauthorizedError("No cards ids");
+    }
+
+    const authResult = await pool.query(
+      "SELECT card_id, quantity FROM users_cards WHERE card_id = ANY($1) AND user_id = $2 AND quantity > 0 ",
+      [cardIds, userId]
+    );
+
+    if (authResult.rows.length === 0) {
+      throw new UnauthorizedError("No cards in db")
+    }
+
+    let compatibility = true;
+    authResult.rows.forEach((row) => {
+      if (sellCount[row.card_id] > row.quantity) {
+        compatibility = false;
+      }
+    });
+
+    if (!compatibility) {
+      throw new UnauthorizedError("No cards for sell");
+    }
+
+    const cardsValue = await pool
+      .query("SELECT id, value FROM cards WHERE id = ANY($1)", [cardIds])
+      .then((res) => res.rows);
+
+    const profit = cardsValue.reduce((sum, card) => {
+      return sum + card.value * sellCount[card.id];
+    }, 0);
+
+    for (const row of authResult.rows) {
+      await pool.query(
+        "UPDATE users_cards SET quantity = quantity - $3 WHERE user_id = $1 AND card_id = $2",
+        [userId, row.card_id, sellCount[row.card_id]]
+      );
+    }
+    const newBalance = await pool.query(
+      "UPDATE users SET balance = balance + $2 WHERE id = $1 RETURNING balance",
+      [userId, profit]
+    ).then(res => res.rows[0].balance)
+
+    const cardsnumber = await pool
+      .query(
+        "SELECT sum(quantity) as cards FROM users_cards WHERE user_id = $1",
+        [userId]
+      )
+      .then((res) => res.rows[0].cards);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        newBalance: newBalance,
+        cards: cardsnumber
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   cards,
   sell,
   sellDuplicate,
+  sellAll,
 };

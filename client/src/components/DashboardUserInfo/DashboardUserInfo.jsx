@@ -5,7 +5,7 @@ function DashboardUserInfo({ user }) {
     <section className={styles.userInfoSection}>
       <div className={styles.userInfoCard}>
         <div className={styles.userInfoItem}>
-          <span className={styles.userInfoLabel}>Użytkownizk</span>
+          <span className={styles.userInfoLabel}>Użytkownik</span>
           <span className={styles.userInfoValue}>{user.name}</span>
         </div>
         <div className={styles.userInfoItem}>

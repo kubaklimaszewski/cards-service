@@ -1,11 +1,11 @@
 import { Children } from "react";
 import styles from "./CardActions.module.css";
 
-export function CardButton({ id, onAction, children }) {
+export function CardButton({ card, onAction, children }) {
   return (
     <>
       <button
-        onClick={() => onAction(id)}
+        onClick={() => onAction(card)}
         className={styles.cardBtn}
       >
         {children}

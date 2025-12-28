@@ -29,6 +29,94 @@
   font-weight: 500;
 }
 
+/* PackOpening */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 40, 40, 0.1);
+  backdrop-filter: blur(1px);
+  z-index: 1000;
+  animation: fadeInOv 300ms ease-out;
+}
+
+.dropContainer {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card2);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  animation: popIn 1200ms ease-out;
+  width: min(95vw, 1280px);
+  max-width: calc(5 * 220px + 9 * 20px); 
+}
+
+
+.dropGrid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 20px;
+  width: 100%;
+  scroll-snap-type: x proximity;
+  scrollbar-color: rgba(255,255,255,0.2) rgba(30,30,30,0);
+}
+
+.dropGrid6 {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 20px;
+  width: 100%;
+  scroll-snap-type: x proximity;
+  scrollbar-color: rgba(255,255,255,0.2) rgba(30,30,30,0);
+}
+
+.card {
+  flex: 0 0 220px;
+  width: 220px;
+  scroll-snap-align: center;   
+}
+
+.dropActions {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.btn {
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-sans);
+}
+
+.btn:hover {
+  background: var(--accent);
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .packsGrid {
@@ -52,5 +140,23 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  } 
+  }
+}
+
+@keyframes fadeInOv {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: translate(-50%, -50%) translateY(100vh);
+  }
+  to {
+    transform: translate(-50%, -50%) translateY(0);
+  }
 }
